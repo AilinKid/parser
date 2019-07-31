@@ -219,6 +219,10 @@ func (ft *FieldType) Restore(ctx *format.RestoreCtx) error {
 	case mysql.TypeTimestamp, mysql.TypeDatetime, mysql.TypeDuration:
 		precision = ft.Decimal
 		scale = UnspecifiedLength
+	// This for type without decimal but added default to it, which will cause restored sql unable to use.
+	case mysql.TypeBit, mysql.TypeShort, mysql.TypeTiny, mysql.TypeInt24, mysql.TypeLong, mysql.TypeLonglong, mysql.TypeVarchar, mysql.TypeString, mysql.TypeVarString, mysql.TypeYear, mysql.TypeBlob:
+		precision = ft.Flen
+		scale = UnspecifiedLength
 	}
 
 	if precision != UnspecifiedLength {
