@@ -667,7 +667,7 @@ func (s *testParserSuite) TestDMLStmt(c *C) {
 
 		// for insert ... set
 		{"INSERT INTO t SET a=1,b=2", true, "INSERT INTO `t` SET `a`=1,`b`=2"},
-		{"INSERT INTO t (a) SET a=1", false, ""},
+		{"INSERT INTO t (a) SET a=1", false, "dfs"},
 
 		// for update statement
 		{"UPDATE LOW_PRIORITY IGNORE t SET id = id + 1 ORDER BY id DESC;", true, "UPDATE LOW_PRIORITY IGNORE `t` SET `id`=`id`+1 ORDER BY `id` DESC"},
@@ -2439,6 +2439,9 @@ func (s *testParserSuite) TestDDL(c *C) {
 		{"create table t (a long);", true, "CREATE TABLE `t` (`a` MEDIUMTEXT)"},
 		{"create table t (a long varchar);", true, "CREATE TABLE `t` (`a` MEDIUMTEXT)"},
 		{"create table t (a mediumtext, b long varchar, c long);", true, "CREATE TABLE `t` (`a` MEDIUMTEXT,`b` MEDIUMTEXT,`c` MEDIUMTEXT)"},
+
+		// for repair table mode.
+		{"ADMIN REPAIR TABLE t CREATE TABLE t (a int)", true, "ADMIN REPAIR TABLE `t` CREATE TABLE `t` (`a` INT)"},
 	}
 	s.RunTest(c, table)
 }

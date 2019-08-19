@@ -7193,6 +7193,13 @@ AdminStmt:
 			Tables: $5.([]*ast.TableName),
 		}
 	}
+|	"ADMIN" "REPAIR" "TABLE" TableName CreateTableStmt
+	{
+		$$ = &ast.RepairTableStmt{
+			Table: $4.(*ast.TableName),
+			CreateStmt: $5.(*ast.CreateTableStmt),
+		}
+	}
 
 AdminShowSlow:
 	"RECENT" NUM
