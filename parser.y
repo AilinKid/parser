@@ -1829,9 +1829,8 @@ AlterTableSpec:
 		yylex.AppendError(yylex.Errorf("The SECONDARY_UNLOAD VALIDATION clause is parsed but not implement yet."))
 		parser.lastErrorAsWarn()
 	}
-|	"ALTER" "CHECK" Identifier EnforcedOrNot
+|	"ALTER" CheckConstraintKeyword Identifier EnforcedOrNot
 	{
-		// Parse it and ignore it. Just for compatibility.
 		c := &ast.Constraint{
 			Name:     $3,
 			Enforced: $4.(bool),
@@ -1840,10 +1839,8 @@ AlterTableSpec:
 			Tp:         ast.AlterTableAlterCheck,
 			Constraint: c,
 		}
-		yylex.AppendError(yylex.Errorf("The ALTER CHECK clause is parsed but not implemented yet."))
-		parser.lastErrorAsWarn()
 	}
-|	"DROP" "CHECK" Identifier
+|	"DROP" CheckConstraintKeyword Identifier
 	{
 		// Parse it and ignore it. Just for compatibility.
 		c := &ast.Constraint{
@@ -1853,8 +1850,6 @@ AlterTableSpec:
 			Tp:         ast.AlterTableDropCheck,
 			Constraint: c,
 		}
-		yylex.AppendError(yylex.Errorf("The DROP CHECK clause is parsed but not implemented yet."))
-		parser.lastErrorAsWarn()
 	}
 |	"ALTER" "INDEX" Identifier IndexInvisible
 	{
@@ -9288,6 +9283,10 @@ Constraint:
 		}
 		$$ = cst
 	}
+
+CheckConstraintKeyword:
+	"CHECK"
+|	"CONSTRAINT"
 
 TableElement:
 	ColumnDef
